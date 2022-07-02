@@ -1,7 +1,6 @@
 import boto3, botocore
 import os
-import codecs
-import csv
+import pandas as pd
 from werkzeug.utils import secure_filename
 
 s3 = boto3.client(
@@ -34,12 +33,11 @@ def upload_file_to_s3(file):
         print("Something Happened: ", e)
         return e
     
-
     # after upload file to s3 bucket, return filename of the uploaded file
     return file.filename
 
-def read_csv_from_s3(bucket_name=os.getenv("S3_BUCKET"), key, column):
-    data = s3.get_object(Bucket=bucket_name, Key=key)
-
-    for row in csv.DictReader(codecs.getreader("utf-8")(data["Body"])):
-        print(row[column])
+def read_csv_from_s3(key):
+    data = s3.get_object(Bucket=os.getenv("S3_BUCKET"), Key=key)
+    initial_df = pd.read_csv(data['Body'])
+    print(initial_df.head(2))
+    return initial_df
