@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!-- <form action="/dataset_new" method="POST" enctype="multipart/form-data">
+
+        <label for="user_file">Upload Your File</label>
+        <br>
+        <input type="file" name="user_file">
+        <br>
+        <button type="submit">Upload</button>
+
+    </form> -->
+
+    <form method="POST" action="/dataset_new" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <fieldset>
+            <legend>Create a New Donation Item</legend>
+
+            {{ form.title.label }}
+            {{ form.title }}
+            <ul>
+            {% for error in form.title.errors %}
+                <li class="error">{{ error }}</li>
+            {% endfor %}
+            </ul>
+
+            {{ form.dataset_file.label }}
+            {{ form.dataset_file }}
+            <ul>
+            {% for error in form.dataset_file.errors %}
+                <li class="error">{{ error }}</li>
+            {% endfor %}
+            </ul>
+
+            {{ form.photo.label }}
+            {{ form.photo }}
+            <ul>
+            {% for error in form.photo.errors %}
+                <li class="error">{{ error }}</li>
+            {% endfor %}
+            </ul>
+            
+            {{ form.description.label }}
+            {{ form.description }}
+            <ul>
+            {% for error in form.description.errors %}
+                <li class="error">{{ error }}</li>
+            {% endfor %}
+            </ul>
+                
+            {{form.submit}}
+        </fieldset>
+    </form>
+{% endblock %}

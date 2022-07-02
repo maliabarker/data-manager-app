@@ -10,3 +10,11 @@ with app.app_context():
 
 if __name__ == "__main__":
     app.run(debug=True, port=5002)
+
+# ———MVP———
+# TODO create profiles
+# TODO upload datasets
+# TODO view datasets
+# TODO search for datasets
+# TODO favorite/add datasets to profile
+# TODO curate a custom dataset
