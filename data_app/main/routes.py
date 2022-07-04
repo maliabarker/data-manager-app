@@ -94,6 +94,7 @@ def dataset_new():
 '''VIEW ONE DATASET'''
 @main.route('/dataset_view/<dataset_id>', methods=['GET'])
 def dataset_view(dataset_id):
-    read_csv_from_s3()
     dataset = Dataset.query.filter_by(id=dataset_id).one()
-    return render_template('view_dataset.html', dataset=dataset)
+    df = read_csv_from_s3(dataset.dataset_file)
+    # print(df.head(5))
+    return render_template('view_dataset.html', dataset=dataset, tables=[df.to_html()], titles=[''])

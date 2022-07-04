@@ -39,5 +39,4 @@ def upload_file_to_s3(file):
 def read_csv_from_s3(key):
     data = s3.get_object(Bucket=os.getenv("S3_BUCKET"), Key=key)
     initial_df = pd.read_csv(data['Body'])
-    print(initial_df.head(2))
     return initial_df
