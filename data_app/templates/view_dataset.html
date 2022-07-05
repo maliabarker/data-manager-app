@@ -1,17 +1,12 @@
 {% extends 'base.html' %}
+
 {% block content %}
     <h1>{{ dataset.title }}</h1>
-    <h1>{{ dataset.dataset_file }}</h1>
     <a href="https://datamanagementapp.s3.us-west-1.amazonaws.com/{{ dataset.dataset_file }}">Download</a>
-    <div align="center">
+
+    <div class="df-table">
         <table>
-            <h1>
-            <!--Displaying the converted table-->
-                {% for table in tables %}
-                    <h2>{{titles[loop.index]}}</h2>
-                    {{ table|safe }}
-                {% endfor %}
-            </h1>
+            {{ dataframe|safe }}
         </table>
     </div>
 {% endblock %}

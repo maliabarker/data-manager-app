@@ -25,6 +25,10 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@main.route('/index_datasets')
+def index_datasets():
+    all_datasets = Dataset.query.all()
+    return render_template('all_datasets.html', datasets=all_datasets)
 
 '''CREATE NEW DATASET UPLOAD TO S3 BUCKET'''
 @main.route('/dataset_new', methods=['GET', 'POST'])
@@ -97,4 +101,4 @@ def dataset_view(dataset_id):
     dataset = Dataset.query.filter_by(id=dataset_id).one()
     df = read_csv_from_s3(dataset.dataset_file)
     # print(df.head(5))
-    return render_template('view_dataset.html', dataset=dataset, tables=[df.to_html()], titles=[''])
+    return render_template('view_dataset.html', dataset=dataset, dataframe=df.to_html(justify='left', show_dimensions=True, classes=['table', 'table-striped']))
