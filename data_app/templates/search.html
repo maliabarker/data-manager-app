@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h3 class="mt-2">Showing search results for {{ search_query }}</h3>
+    {% for dataset_row in datasets | batch(3) %}
+        <div class="row">
+            {% for dataset in dataset_row %}
+                <div class="col-sm-4 mx-auto my-2">
+                    <div class="card" style="width: 18rem;">
+                        <img src="/static/img/{{ dataset.photo }}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="/dataset_view/{{ dataset.id }}">{{ dataset.title }}</a></h5>
+                            <p class="card-text"> {{ dataset.description }} </p>
+                            <small class="card-text me-auto">_ Downloads</small>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

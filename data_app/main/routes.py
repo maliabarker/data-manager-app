@@ -1,9 +1,9 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash, g
 from flask_login import login_required
 from flask_login import current_user
 from datetime import date, datetime
 from data_app.models import User, Dataset
-from data_app.main.forms import DatasetForm
+from data_app.main.forms import DatasetForm, SearchForm
 import os
 
 from werkzeug.utils import secure_filename
@@ -16,14 +16,30 @@ ALLOWED_EXTENSIONS = {'png', 'csv'}
 
 main = Blueprint("main", __name__)
 
-@main.route('/')
-def homepage():
-    return render_template('home.html', user=current_user)
-
 # function to check file extension
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@main.before_app_request
+def before_request():
+    g.search_form = SearchForm()
+
+
+@main.route('/')
+def homepage():
+    return render_template('home.html', user=current_user)
+
+
+@main.route('/search', methods=['GET', 'POST'])
+def search():
+    search_form = SearchForm()
+    datasets = Dataset.query
+    datasets = datasets.filter(Dataset.title.like('%' + search_form.search_param.data + '%'))
+    datasets = datasets.order_by(Dataset.title).all()
+    print(datasets)
+    return render_template('search.html', datasets=datasets, search_query=search_form.search_param.data)
+
 
 @main.route('/index_datasets')
 def index_datasets():
