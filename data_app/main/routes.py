@@ -31,14 +31,30 @@ def homepage():
     return render_template('home.html', user=current_user)
 
 
-@main.route('/search', methods=['GET', 'POST'])
-def search():
+@main.route('/search/<int:page>', methods=['GET', 'POST'])
+def search(page=1):
     search_form = SearchForm()
-    datasets = Dataset.query
-    datasets = datasets.filter(Dataset.title.like('%' + search_form.search_param.data + '%'))
-    datasets = datasets.order_by(Dataset.title).all()
-    print(datasets)
-    return render_template('search.html', datasets=datasets, search_query=search_form.search_param.data)
+
+    # if search_form.validate_on_submit():
+    #     search_query = search_form.search_param.data
+    #     datasets = Dataset.query
+    #     print(f'jknrewl {search_query}')
+    #     datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
+    #     query = datasets.order_by(Dataset.title)
+    # else:
+    #     query = Dataset.query
+    # pagination = paginate(query, page, error_out=False, max_per_page=6)
+    
+    if search_form.validate_on_submit():
+        search_query = search_form.search_param.data
+        print(f'jknrewl {search_query}')
+
+        datasets = Dataset.query
+        datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
+        datasets = datasets.order_by(Dataset.title).paginate(page, error_out=False, max_per_page=6)
+
+        print(datasets)
+    return render_template('search.html', datasets=datasets, search_query=search_query)
 
 
 @main.route('/index_datasets')

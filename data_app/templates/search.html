@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <h3 class="mt-2">Showing search results for {{ search_query }}</h3>
-    {% for dataset_row in datasets | batch(3) %}
+    {% for dataset_row in datasets.items | batch(3) %}
         <div class="row">
             {% for dataset in dataset_row %}
                 <div class="col-sm-4 mx-auto my-2">
@@ -17,4 +17,11 @@
             {% endfor %}
         </div>
     {% endfor %}
+    {% if datasets.has_prev %}
+        <a href="{{ url_for('main.search', page=datasets.prev_num, search_param={{ search_query }}) }}">&lt;&lt; Newer posts</a>
+    {% endif %} 
+    | 
+    {% if datasets.has_next %}
+        <a href="{{ url_for('main.search', page=datasets.next_num, search_param={{ search_query }}) }}">Older posts &gt;&gt;</a>
+    {% endif %}
 {% endblock %}

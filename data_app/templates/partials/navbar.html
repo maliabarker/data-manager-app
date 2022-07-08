@@ -34,7 +34,7 @@
             </ul>
 
             {% if g.search_form %}
-                <form class="d-flex me-lg-auto" method="GET" action="{{ url_for('main.search') }}">
+                <form class="d-flex me-lg-auto" method="GET" action="{{ url_for('main.search', page=1) }}">
                     {{ g.search_form.search_param(class='form-control me-2', placeholder=g.search_form.search_param.label.text) }}
                     {{ g.search_form.submit(class='btn btn-outline-success') }}
                 </form>
