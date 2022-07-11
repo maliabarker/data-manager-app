@@ -25,23 +25,34 @@ def allowed_file(filename):
 def before_request():
     g.search_form = SearchForm()
 
-
 @main.route('/')
 def homepage():
     return render_template('home.html', user=current_user)
 
 @main.route('/search/<int:page>', methods=['GET', 'POST'])
 def search(page=1):
+    search_query = request.args.get('search_param')
+
+    datasets = Dataset.query
+
+    datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
+    query = datasets.order_by(Dataset.title)
+    pagination = paginate(query, page, error_out=False, max_per_page=6)
+
+    # return f'{search_query}'
+    return render_template('search.html', datasets=datasets, search_query=search_query)
     # search_form = SearchForm()
+    # search_query = search_form.search_param.data
     #
     # if search_form.validate_on_submit():
+    #     search_query = search_form.search_param.data
     #     return 'validated'
     # else:
     #     print(search_form.errors)
-
-    all_datasets = Dataset.query.all()
-
-    return render_template('search.html', datasets=all_datasets)
+    #
+    # all_datasets = Dataset.query.all()
+    #
+    # return render_template('search.html', datasets=all_datasets, search_query=search_query)
 
 
 
