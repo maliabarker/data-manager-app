@@ -1,27 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
     <h3 class="mt-2">Showing search results for {{ search_query }}</h3>
-    {% for dataset_row in datasets.items | batch(3) %}
-        <div class="row">
-            {% for dataset in dataset_row %}
-                <div class="col-sm-4 mx-auto my-2">
-                    <div class="card" style="width: 18rem;">
-                        <img src="/static/img/{{ dataset.photo }}" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h5 class="card-title"><a href="/dataset_view/{{ dataset.id }}">{{ dataset.title }}</a></h5>
-                            <p class="card-text"> {{ dataset.description }} </p>
-                            <small class="card-text me-auto">_ Downloads</small>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
+
+    {% include 'partials/datasets.html' %}
+
     {% if datasets.has_prev %}
-        <a href="{{ url_for('main.search', page=datasets.prev_num, search_param={{ search_query }}) }}">&lt;&lt; Newer posts</a>
-    {% endif %} 
-    | 
+        <a href="{{ url_for('main.search', page=datasets.prev_num, search_param=search_query) }}">&lt;&lt; Newer posts</a>
+    {% endif %}
+    |
     {% if datasets.has_next %}
-        <a href="{{ url_for('main.search', page=datasets.next_num, search_param={{ search_query }}) }}">Older posts &gt;&gt;</a>
+        <a href="{{ url_for('main.search', page=datasets.next_num, search_param=search_query) }}">Older posts &gt;&gt;</a>
     {% endif %}
 {% endblock %}

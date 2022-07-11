@@ -17,11 +17,16 @@ class DatasetForm(FlaskForm):
     submit = SubmitField('Add New Dataset')
 
 class SearchForm(FlaskForm):
-    search_param = StringField('Search Datasets', validators=[DataRequired(), Length(max=80)])
+    # set max length of search back to 80
+    search_param = StringField('Search Datasets', validators=[DataRequired()])
     submit = SubmitField('Go')
-    def __init__(self, *args, **kwargs):
-        if 'formdata' not in kwargs:
-            kwargs['formdata'] = request.args
-        if 'meta' not in kwargs:
-            kwargs['meta'] = {'csrf': False}
-        super(SearchForm, self).__init__(*args, **kwargs)
+
+    # def validate_search_form(self, search_param):
+    #     if not search_param:
+    #         raise ValidationError('no search params')
+    # def __init__(self, *args, **kwargs):
+    #     if 'formdata' not in kwargs:
+    #         kwargs['formdata'] = request.args
+    #     if 'meta' not in kwargs:
+    #         kwargs['meta'] = {'csrf': False}
+    #     super(SearchForm, self).__init__(*args, **kwargs)
