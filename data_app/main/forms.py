@@ -19,7 +19,7 @@ class DatasetForm(FlaskForm):
 class SearchForm(FlaskForm):
     # set max length of search back to 80
     search_param = StringField('Search Datasets', validators=[DataRequired()])
-    submit = SubmitField('Go')
+    submit = SubmitField('Search')
 
     # def validate_search_form(self, search_param):
     #     if not search_param:

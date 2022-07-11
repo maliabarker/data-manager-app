@@ -32,25 +32,17 @@ def homepage():
 
 @main.route('/search/<int:page>', methods=['GET', 'POST'])
 def search(page=1):
-
-    search = False
-    q = request.args.get('search_param')
-    if q:
-        search = True
+    search_query = request.args.get('search_param')
 
     page = request.args.get(get_page_parameter(), type=int, default=1)
 
-    # search_query = request.args.get('search_param')
+    datasets = Dataset.query.filter(
+        Dataset.title.like(f'%{search_query}%') | Dataset.description.like(f'%{search_query}%'))
+    datasets = datasets.order_by(Dataset.title)  # override datasets
 
-    datasets = Dataset.query
+    pagination = Pagination(page=page, total=datasets.count(), record_name='datasets')
 
-    datasets = datasets.filter(Dataset.title.like('%' + q + '%') | Dataset.description.like('%' + q + '%'))
-    query = datasets.order_by(Dataset.title)
-
-    pagination = Pagination(page=page, total=datasets.count(), search=search, record_name='datasets')
-    #
-    return render_template('search.html', datasets=query, pagination=pagination)
-
+    return render_template('search.html', search_query=search_query, datasets=datasets, pagination=pagination)
 
 @main.route('/index_datasets')
 def index_datasets():
