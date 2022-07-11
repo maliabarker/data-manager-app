@@ -4,6 +4,7 @@ from flask_login import current_user
 from datetime import date, datetime
 from data_app.models import User, Dataset
 from data_app.main.forms import DatasetForm, SearchForm
+from flask_paginate import Pagination, get_page_parameter
 import os
 
 from werkzeug.utils import secure_filename
@@ -31,52 +32,24 @@ def homepage():
 
 @main.route('/search/<int:page>', methods=['GET', 'POST'])
 def search(page=1):
-    search_query = request.args.get('search_param')
+
+    search = False
+    q = request.args.get('search_param')
+    if q:
+        search = True
+
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+
+    # search_query = request.args.get('search_param')
 
     datasets = Dataset.query
 
-    datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
+    datasets = datasets.filter(Dataset.title.like('%' + q + '%') | Dataset.description.like('%' + q + '%'))
     query = datasets.order_by(Dataset.title)
-    pagination = paginate(query, page, error_out=False, max_per_page=6)
 
-    # return f'{search_query}'
-    return render_template('search.html', datasets=datasets, search_query=search_query)
-    # search_form = SearchForm()
-    # search_query = search_form.search_param.data
+    pagination = Pagination(page=page, total=datasets.count(), search=search, record_name='datasets')
     #
-    # if search_form.validate_on_submit():
-    #     search_query = search_form.search_param.data
-    #     return 'validated'
-    # else:
-    #     print(search_form.errors)
-    #
-    # all_datasets = Dataset.query.all()
-    #
-    # return render_template('search.html', datasets=all_datasets, search_query=search_query)
-
-
-
-    # if search_form.validate_on_submit():
-    #     search_query = search_form.search_param.data
-    #     datasets = Dataset.query
-    #     print(f'jknrewl {search_query}')
-    #     datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
-    #     query = datasets.order_by(Dataset.title)
-    # else:
-    #     query = Dataset.query
-    # pagination = paginate(query, page, error_out=False, max_per_page=6)
-
-    # if search_form.validate_on_submit():
-    #     search_query = search_form.search_param.data
-    #     print(f'jknrewl {search_query}')
-    #
-    #     datasets = Dataset.query
-    #     datasets = datasets.filter(Dataset.title.like('%' + search_query + '%') | Dataset.description.like('%' + search_query + '%'))
-    #     datasets = datasets.order_by(Dataset.title).paginate(page, error_out=False, max_per_page=6)
-    #
-    #     print(datasets)
-    #     return render_template('search.html', datasets=datasets, search_query=search_query)
-    # return 'sfd'
+    return render_template('search.html', datasets=query, pagination=pagination)
 
 
 @main.route('/index_datasets')
