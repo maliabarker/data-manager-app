@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, g, jsonify
+from flask import Blueprint, request, render_template, redirect, url_for, flash, g, send_file, jsonify
 from flask_login import login_required
 from flask_login import current_user
 from datetime import date, datetime
@@ -123,11 +123,12 @@ def dataset_view(dataset_id):
     # print(df.head(5))
     return render_template('view_dataset.html', dataset=dataset, dataframe=df.to_html(justify='left', show_dimensions=True, classes=['table', 'table-striped']))
 
-
-@main.route('/dataset/<dataset_id>/increase_count', methods=['POST'])
-def increase_count(dataset_id):
+@main.route('/dataset/<dataset_id>/download', methods=['GET'])
+def download_file(dataset_id):
     dataset = db.session.query(Dataset).filter_by(id=dataset_id).one()
     dataset.download_count += 1
 
     db.session.add(dataset)
     db.session.commit()
+
+    return jsonify({'fileUrl': f'https://datamanagementapp.s3.us-west-1.amazonaws.com/{dataset.dataset_file}'})

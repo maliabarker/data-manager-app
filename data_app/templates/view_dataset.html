@@ -4,10 +4,7 @@
     <h1>{{ dataset.title }}</h1>
 
     <div class="d-flex flex-row mb-3">
-      <form id="someForm" class="mr-sm-2" action="/dataset/{{ dataset.id }}/increase_count" method="post">
-        <a id="downloadLink" href="https://datamanagementapp.s3.us-west-1.amazonaws.com/{{ dataset.dataset_file }}" class="btn btn-outline-primary">Download</a>
-        <!-- <p id="downloadLink">link</p> -->
-      </form>
+      <a id="downloadLink" href="/dataset/{{ dataset.id }}/download" class="btn btn-outline-primary">Download</a>
 
       <form action="index.html" method="post">
         <button type="button" class="btn btn-outline-danger">Delete</button>
@@ -21,14 +18,15 @@
     </div>
 
     <script type="text/javascript">
-      document.getElementById("downloadLink").onclick = (e) => {
-          const incrDownloadform = document.getElementById('someForm');
+      const downloadLink = document.getElementById('downloadLink');
 
-          fetch(incrDownloadform.action, {method: 'post'}).then((data) => {
-            console.log(data)
-          }).catch((error) => {
-            console.log(error)
-          })
+      document.getElementById("downloadLink").onclick = (e) => {
+        e.preventDefault();
+        fetch(downloadLink.href).then((response) => {
+          return response.json()
+        }).then(data => {
+          window.location = data.fileUrl;
+        })
       }
     </script>
 {% endblock %}
