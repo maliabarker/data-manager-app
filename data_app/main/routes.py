@@ -125,6 +125,7 @@ def dataset(dataset_id):
 
 @main.route('/datasets/<dataset_id>/download', methods=['GET'])
 def download_file(dataset_id):
+    # TODO: add dataset to user downloaded files
     dataset = db.session.query(Dataset).filter_by(id=dataset_id).one()
     dataset.download_count += 1
 
