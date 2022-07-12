@@ -16,14 +16,15 @@ if __name__ == "__main__":
 '''
 TODO 
 
-add route and template for viewing user's favorited, downloaded, and uploaded datasets
-
 create profiles
-- add a favorited list
-— add a downloaded list
-— add an uploaded list
-— only allow editing and deleting AND uploading datasets if created_by is equal to current user
+- route & template for favorited list
+— route & template for downloaded list
+— route & template for uploaded list
+— only allow editing and deleting if created_by is equal to current user
 
+editing data
+- edit datasets
+- edit profile picture
 
 ability to favorite/add datasets to profile
 curate a custom dataset

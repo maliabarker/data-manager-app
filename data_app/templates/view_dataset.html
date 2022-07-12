@@ -5,11 +5,12 @@
     <small>Created by <a href="/profile/{{ dataset.created_by.username }}">{{ dataset.created_by.username }}</a></small>
 
     <div class="d-flex flex-row mb-3">
-      <a id="downloadLink" href="/datasets/{{ dataset.id }}/download" class="btn btn-outline-primary">Download</a>
-
-      <form action="/datasets/{{ dataset.id }}/delete" method="POST">
-        <button type="submit" class="btn btn-outline-danger">Delete</button>
-      </form>
+        <a id="downloadLink" href="/datasets/{{ dataset.id }}/download" class="btn btn-outline-primary">Download</a>
+        {% if dataset.created_by_id == current_user.id %}
+            <form action="/datasets/{{ dataset.id }}/delete" method="POST">
+                <button type="submit" class="btn btn-outline-danger">Delete</button>
+            </form>
+        {% endif %}
     </div>
 
     <div class="df-table">
