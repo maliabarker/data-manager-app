@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, g, send_file, jsonify
+from flask import Blueprint, request, render_template, redirect, url_for, flash, g, jsonify
 from flask_login import login_required
 from flask_login import current_user
 from datetime import date, datetime
@@ -44,13 +44,13 @@ def search(page=1):
 
     return render_template('search.html', search_query=search_query, datasets=datasets, pagination=pagination)
 
-@main.route('/index_datasets')
+@main.route('/datasets')
 def index_datasets():
     all_datasets = Dataset.query.all()
     return render_template('all_datasets.html', datasets=all_datasets)
 
 '''CREATE NEW DATASET UPLOAD TO S3 BUCKET'''
-@main.route('/dataset_new', methods=['GET', 'POST'])
+@main.route('/datasets/new', methods=['GET', 'POST'])
 def dataset_new():
     form = DatasetForm()
     if form.validate_on_submit():
@@ -100,7 +100,7 @@ def dataset_new():
                 db.session.commit()
                 flash("Success upload")
 
-                return redirect(url_for('main.dataset_view', dataset_id=dataset.id))
+                return redirect(url_for('main.dataset', dataset_id=dataset.id))
 
             # upload failed, redirect to upload page
             else:
@@ -116,14 +116,14 @@ def dataset_new():
 
 
 '''VIEW ONE DATASET'''
-@main.route('/dataset_view/<dataset_id>', methods=['GET'])
-def dataset_view(dataset_id):
+@main.route('/datasets/<dataset_id>', methods=['GET'])
+def dataset(dataset_id):
     dataset = Dataset.query.filter_by(id=dataset_id).one()
     df = read_csv_from_s3(dataset.dataset_file)
     # print(df.head(5))
     return render_template('view_dataset.html', dataset=dataset, dataframe=df.to_html(justify='left', show_dimensions=True, classes=['table', 'table-striped']))
 
-@main.route('/dataset/<dataset_id>/download', methods=['GET'])
+@main.route('/datasets/<dataset_id>/download', methods=['GET'])
 def download_file(dataset_id):
     dataset = db.session.query(Dataset).filter_by(id=dataset_id).one()
     dataset.download_count += 1
@@ -132,3 +132,10 @@ def download_file(dataset_id):
     db.session.commit()
 
     return jsonify({'fileUrl': f'https://datamanagementapp.s3.us-west-1.amazonaws.com/{dataset.dataset_file}'})
+
+@main.route('/datasets/<dataset_id>/delete', methods=['POST'])
+def delete_file(dataset_id):
+    db.session.query(Dataset).filter_by(id=dataset_id).delete()
+    db.session.commit()
+
+    return redirect(url_for('main.index_datasets'))

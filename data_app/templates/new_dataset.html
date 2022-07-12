@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <!-- <form action="/dataset_new" method="POST" enctype="multipart/form-data">
+    <!-- <form action="/datasets/new" method="POST" enctype="multipart/form-data">
 
         <label for="user_file">Upload Your File</label>
         <br>
@@ -10,7 +10,7 @@
 
     </form> -->
 
-    <form method="POST" action="/dataset_new" enctype="multipart/form-data">
+    <form method="POST" action="/datasets/new" enctype="multipart/form-data">
         {{ form.csrf_token }}
         <fieldset>
             <legend>Create a New Donation Item</legend>
@@ -38,7 +38,7 @@
                 <li class="error">{{ error }}</li>
             {% endfor %}
             </ul>
-            
+
             {{ form.description.label }}
             {{ form.description }}
             <ul>
@@ -46,7 +46,7 @@
                 <li class="error">{{ error }}</li>
             {% endfor %}
             </ul>
-                
+
             {{form.submit}}
         </fieldset>
     </form>
