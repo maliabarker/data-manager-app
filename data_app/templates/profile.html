@@ -1,4 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>{{ user.username }}</h1>
+    <div class="row mt-5">
+        <div class="col-sm-3">
+            <img src="https://datamanagementapp.s3.us-west-1.amazonaws.com/profile_pics/{{ user.profile_picture }}" 
+                class="img img-fluid"
+                alt=""
+                style="border-radius: 50%; width: 250px; height: 250px; object-fit: cover;">
+        </div>
+        <div class="col-sm-9">
+            <h2 class="mb-5">{{ user.username }}</h2>
+            <a href="" class="btn btn-primary">{{ user.favorite_datasets | length }} Favorited Datasets</a>
+            <hr>
+            <a href="" class="btn btn-primary">{{ user.downloaded_datasets | length }} Downloaded Datasets</a>
+            <hr>
+            <a href="" class="btn btn-primary">{{ uploaded_datasets | length }} Uploaded Datasets</a>
+        </div>
+    </div>
 {% endblock %}

@@ -16,6 +16,8 @@ if __name__ == "__main__":
 '''
 TODO 
 
+add route and template for viewing user's favorited, downloaded, and uploaded datasets
+
 create profiles
 - add a favorited list
 — add a downloaded list
@@ -31,6 +33,7 @@ curate a custom dataset
 '''
 BUGS:
 datasets still shown when AWS is not connected
+images from aws load in SO SLOW, maybe try to fix it or migrate from aws to just storing photos in folder of proj
 '''
 
 

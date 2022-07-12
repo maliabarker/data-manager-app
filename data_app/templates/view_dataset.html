@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1>{{ dataset.title }}</h1>
-    <small>Created by <a href="/profile/{{ dataset.created_by.id }}">{{ dataset.created_by.username }}</a></small>
+    <small>Created by <a href="/profile/{{ dataset.created_by.username }}">{{ dataset.created_by.username }}</a></small>
 
     <div class="d-flex flex-row mb-3">
       <a id="downloadLink" href="/datasets/{{ dataset.id }}/download" class="btn btn-outline-primary">Download</a>

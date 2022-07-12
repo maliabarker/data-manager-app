@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from flask import Blueprint, request, render_template, redirect, url_for, flash, g, jsonify
 from flask_login import login_required
 from flask_login import current_user
@@ -55,42 +56,43 @@ def index_datasets():
 def dataset_new():
     form = DatasetForm()
     if form.validate_on_submit():
-        image_dir = os.path.join(
-            os.path.dirname(app.instance_path), 'data_app/static/img'
-        )
+        # image_dir = os.path.join(
+        #     os.path.dirname(app.instance_path), 'data_app/static/img'
+        # )
 
         # check whether an input field with name 'user_file' exist
-        if 'dataset_file' not in request.files:
-            flash('No user_file key in request.files')
+        if 'dataset_file' not in request.files or 'photo' not in request.files:
+            flash('No dataset_file key or photo_file key in request.files')
             return redirect(url_for('main.dataset_new'))
+        
 
         # after confirm 'user_file' exist, get the file from input
         dataset = form.dataset_file.data
-        print(dataset)
-
         photo = form.photo.data
+        print(dataset)
         print(photo)
-
-        photo_filename = secure_filename(photo.filename)
-        photo.save(os.path.join(image_dir, photo_filename))
+        
+        # photo_filename = secure_filename(photo.filename)
+        # photo.save(os.path.join(image_dir, photo_filename))
 
         # check whether a file is selected
-        if dataset.filename == '':
-            flash('No selected file')
+        if dataset.filename == '' or photo.filename == '':
+            flash('No selected file for dataset or photo')
             return redirect(url_for('main.dataset_new'))
 
         # check whether the file extension is allowed (eg. png,jpeg,jpg,gif)
-        if dataset and allowed_file(dataset.filename):
-            output = upload_file_to_s3(dataset)
+        if dataset and allowed_file(dataset.filename) and photo and allowed_file(photo.filename):
+            output1 = upload_file_to_s3(dataset, 'datasets')
+            output2 = upload_file_to_s3(photo, 'dataset_pics')
 
             # if upload success,will return file name of uploaded file
-            if output:
+            if output1 and output2:
                 # write your code here
                 # to save the file name in database
                 dataset = Dataset(
                     title = form.title.data,
                     dataset_file = dataset.filename,
-                    photo = photo_filename,
+                    photo = photo.filename,
                     description = form.description.data,
                     download_count = 0,
                     created_by = current_user
@@ -145,8 +147,10 @@ def delete_file(dataset_id):
     return redirect(url_for('main.index_datasets'))
 
 '''VIEW PROFILE'''
-@main.route('/profile/<user_id>', methods=['GET'])
-def view_profile(user_id):
-    this_user = User.query.filter_by(id=user_id).one()
-    print(this_user)
-    return render_template('profile.html', user=this_user)
+@main.route('/profile/<username>', methods=['GET'])
+def view_profile(username):
+    this_user = User.query.filter_by(username=username).one()
+    uploaded_dfs = Dataset.query.filter_by(created_by_id=this_user.id).all()
+    # print(this_user.downloaded_datasets)
+    print(uploaded_dfs)
+    return render_template('profile.html', user=this_user, uploaded_datasets=uploaded_dfs)

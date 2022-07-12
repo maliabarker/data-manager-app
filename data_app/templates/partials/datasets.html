@@ -3,7 +3,8 @@
         {% for dataset in dataset_row %}
             <div class="col-sm-4 mx-auto my-4">
                 <div class="card" style="width: 18rem;">
-                    <img src="/static/img/{{ dataset.photo }}" class="card-img-top" alt="...">
+                    <!-- <img src="/static/img/{{ dataset.photo }}" class="card-img-top" alt="..."> -->
+                    <img src="https://datamanagementapp.s3.us-west-1.amazonaws.com/dataset_pics/{{ dataset.photo }}" class="card-img-top" alt="...">
                     <div class="card-body">
                         <h5 class="card-title"><a href="/datasets/{{ dataset.id }}">{{ dataset.title }}</a></h5>
                         <p class="card-text"> {{ dataset.description }} </p>
