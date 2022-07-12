@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash, g
+from flask import Blueprint, request, render_template, redirect, url_for, flash, g, jsonify
 from flask_login import login_required
 from flask_login import current_user
 from datetime import date, datetime
@@ -90,7 +90,8 @@ def dataset_new():
                     title = form.title.data,
                     dataset_file = dataset.filename,
                     photo = photo_filename,
-                    description = form.description.data
+                    description = form.description.data,
+                    download_count = 0
                 )
 
                 print(dataset)
@@ -125,8 +126,8 @@ def dataset_view(dataset_id):
 
 @main.route('/dataset/<dataset_id>/increase_count', methods=['POST'])
 def increase_count(dataset_id):
-    dataset = Dataset.query.filter_by(id=data_id)
+    dataset = db.session.query(Dataset).filter_by(id=dataset_id).one()
     dataset.download_count += 1
 
     db.session.add(dataset)
-    db.dataset.commit()
+    db.session.commit()

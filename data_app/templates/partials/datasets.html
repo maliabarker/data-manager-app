@@ -7,7 +7,9 @@
                     <div class="card-body">
                         <h5 class="card-title"><a href="/dataset_view/{{ dataset.id }}">{{ dataset.title }}</a></h5>
                         <p class="card-text"> {{ dataset.description }} </p>
-                        <small class="card-text me-auto">_ Downloads</small>
+                        <small class="card-text me-auto">
+                          <u>{{ dataset.download_count }}</u> Downloads
+                        </small>
                     </div>
                 </div>
             </div>
