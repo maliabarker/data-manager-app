@@ -121,3 +121,12 @@ def dataset_view(dataset_id):
     df = read_csv_from_s3(dataset.dataset_file)
     # print(df.head(5))
     return render_template('view_dataset.html', dataset=dataset, dataframe=df.to_html(justify='left', show_dimensions=True, classes=['table', 'table-striped']))
+
+
+@main.route('/dataset/<dataset_id>/increase_count', methods=['POST'])
+def increase_count(dataset_id):
+    dataset = Dataset.query.filter_by(id=data_id)
+    dataset.download_count += 1
+
+    db.session.add(dataset)
+    db.dataset.commit()

@@ -29,3 +29,4 @@ class Dataset(db.Model):
     photo = db.Column(URLType)
     dataset_file = db.Column(URLType)
     description = db.Column(db.String(240))
+    download_count = db.Column(db.Integer)

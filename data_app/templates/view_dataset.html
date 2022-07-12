@@ -2,7 +2,10 @@
 
 {% block content %}
     <h1>{{ dataset.title }}</h1>
-    <a href="https://datamanagementapp.s3.us-west-1.amazonaws.com/{{ dataset.dataset_file }}">Download</a>
+
+    <form class="" action="/dataset/{{ dataset.id }}/increase_count" method="post">
+      <a href="https://datamanagementapp.s3.us-west-1.amazonaws.com/{{ dataset.dataset_file }}">Download</a>
+    </form>
 
     <div class="df-table">
         <table>
