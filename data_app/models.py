@@ -35,8 +35,8 @@ class Dataset(db.Model):
     download_count = db.Column(db.Integer)
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     created_by = db.relationship('User')
-    users_favorited = db.relationship('User', secondary='favorited_datasets')
-    users_downloaded = db.relationship('User', secondary='downloaded_datasets')
+    users_favorited = db.relationship('User', secondary='favorited_datasets', back_populates='favorite_datasets')
+    users_downloaded = db.relationship('User', secondary='downloaded_datasets', back_populates='downloaded_datasets')
 
 
 downloaded_datasets_table = db.Table('downloaded_datasets', 

@@ -51,6 +51,7 @@ def index_datasets():
 
 '''CREATE NEW DATASET UPLOAD TO S3 BUCKET'''
 @main.route('/datasets/new', methods=['GET', 'POST'])
+@login_required
 def dataset_new():
     form = DatasetForm()
     if form.validate_on_submit():
@@ -91,10 +92,12 @@ def dataset_new():
                     dataset_file = dataset.filename,
                     photo = photo_filename,
                     description = form.description.data,
-                    download_count = 0
+                    download_count = 0,
+                    created_by = current_user
                 )
 
                 print(dataset)
+                dataset = db.session.merge(dataset)
 
                 db.session.add(dataset)
                 db.session.commit()
@@ -140,3 +143,10 @@ def delete_file(dataset_id):
     db.session.commit()
 
     return redirect(url_for('main.index_datasets'))
+
+'''VIEW PROFILE'''
+@main.route('/profile/<user_id>', methods=['GET'])
+def view_profile(user_id):
+    this_user = User.query.filter_by(id=user_id).one()
+    print(this_user)
+    return render_template('profile.html', user=this_user)
